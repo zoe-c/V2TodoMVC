@@ -119,6 +119,17 @@ app.delete('/api/todos/:id', function (req, res) {
    })
 })
 
+// CHECK TO SEE IF THIS ALSO WORKS FOR DOCS AND NOT JUST SUBDOCS?
+// app.delete('/api/todos/:id', function(req, res) {
+//    Todo.remove({_id: req.params.id}, function (err, todo) {
+//       if(err) {
+//          res.send(err);
+//       }
+//       return todo
+//    }).then(function(todo) {
+//       res.json(todo);
+//    })
+// })
 
 app.listen(3000, function () {
     console.log('Express running on http://localhost:3000/.')

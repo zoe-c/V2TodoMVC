@@ -16,20 +16,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// var todo = new Todo ({
-//       title: "gonna turn in this todo, todo",
-//       completed: false
-//    });
-//
-// todo.save(function(err) {
-//   if (err) {
-//     throw err;
-//   }
-//   console.log('todo created!');
-// }).then(function(todo) {
-//    console.log(todo);
-// });
-
 app.use('/static', express.static('static'));
 
 app.get('/', function (req, res) {
@@ -38,6 +24,7 @@ app.get('/', function (req, res) {
 
 // put routes here
 
+// NOTE: works.
 // GET /api/todos/ - return a JSON array of todo items
 app.get('/api/todos', function(req, res) {
    Todo.find({}, function(err, todos) {
@@ -48,21 +35,25 @@ app.get('/api/todos', function(req, res) {
    })
 })
 
+// NOTE: WORKS. from their form & postman... just blew it up.
+// had to comment out.
 // POST /api/todos/ - post a JSON representation of a todo and have it saved. Returns the saved todo item in JSON.
 app.post('/api/todos', function (req, res) {
-   var todo = new Todo ({
-      title: req.body.title,
-      completed: false
-   });
-   todo.save(function(err, todo) {
-     if (err) {
-       throw err;
-     }
-     console.log('todo created!');
-     res.json(todo);
-   })
+   // var todo = new Todo ({
+   //    title: req.body.title,
+   //    completed: false
+   // });
+   // todo.save(function(err, todo) {
+   //   if (err) {
+   //     throw err;
+   //   }
+   //   console.log('todo created!');
+   //   res.json(todo);
+   // })
 })
 
+
+// NOTE: works
 // GET /api/todos[/id] - get a specific todo item.
 app.get('/api/todos/:id', function(req, res) {
    Todo.findOne({ _id: req.params.id}, function(err, todo) {
@@ -74,7 +65,7 @@ app.get('/api/todos/:id', function(req, res) {
 
 })
 
-// DON'T KNOW ABOUT THIS ONE
+//NOTE: DON'T KNOW ABOUT THIS ONE
 // PUT /api/todos[/id] - update a todo item. Returns the modified todo item.
 app.put('/api/todos/:id', function(req, res) {
    Todo.findOne({ _id: req.params.id }, function(err, todo) {
@@ -99,28 +90,34 @@ app.put('/api/todos/:id', function(req, res) {
 // })
 })
 
+//NOTE: DON'T KNOW ABOUT THIS ONE EITHER. SAME CODE AS PUT..
 // PATCH /api/todos[/id] - partially update a todo item. Returns the modified todo item.
 app.patch('/api/todos/:id', function(req, res) {
+   Todo.findOne({ _id: req.params.id }, function(err, todo) {
+      if (err) {
+         res.send(err);
+      }
+      return todo
+   }).then(function(todo) {
+      todo = req.body
+   })
+   todo.save().then(function(todo) {
+      res.json(todo)
+   })
 
 })
 
 // DELETE /api/todos[/id] - deletes a todo item. Returns the todo item that was deleted.
 app.delete('/api/todos/:id', function (req, res) {
-
+   Todo.deleteOne({_id: req.params.id}, function(err, todo) {
+      if (err) {
+         res.send(err);
+      }
+      return todo
+   }).then(function(todo) {
+      res.json(todo);
+   })
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 app.listen(3000, function () {
